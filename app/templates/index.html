@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<div class="col-md-6">
+	<div class="card">
+		<div class="form_div">
+			<form class="input_form" method="POST" id="url_form">
+				<div class="form-group">
+					<input type="" name="" class="form-control" id="url_input" placeholder="Enter A Valid URL">
+				</div>
+				<button class="btn float-right" id="generate_button">Minify</button>
+				<div class="new_url"></div>
+				<div>
+					
+				</div>
+			</form>
+			<br>
+		</div>
+	</div>
+</div>
+
+
+<style>
+.form-control{
+	outline: none !important;
+	box-shadow: none !important;
+}
+.btn{
+	outline: none !important;
+	box-shadow: none !important;
+}
+.new_url_text{
+	text-decoration: none !important;
+}
+</style>
+
+<script src="/static/js/jquery.min.js"></script>
+
+<script>
+	setInterval(function(){
+		var content = $("#url_input").val();
+
+		if ( content == "" ){
+			$("#generate_button").attr("disabled", "true");
+		}else{
+			$("#generate_button").removeAttr("disabled");
+		}
+	}, 10);
+
+	$("#url_form").on("submit", function(e){
+		e.preventDefault();
+		var url_input = $("#url_input").val();
+
+		req = $.ajax({
+			url: '/process_url/',
+			type: "post",
+			data: { url_input : url_input },
+			success: function(data){
+				$(".new_url").html('<button class="btn new_url_btn" ><a href="https://' + data.real_url + '"class="new_url_text" target="_blank" >' + data.fake_url + '</a></button>');
+				console.log(data.fake_url);
+			}
+		})
+
+	});
+</script>
+{% endblock %}
